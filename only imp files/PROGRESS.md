@@ -15,7 +15,7 @@ Master index reference: 13 volumes (V1–V13), Volume 2 alone covers 92 approved
 - ✅ Chapter 4 — PDF Engine features (16 features fully specced)
 - ✅ Chapter 5 — OCR Engine features (8 features fully specced)
 - ✅ Chapter 6 — Office Engine features (8 features fully specced)
-- ⬜ Chapter 7 — Image, Video, Audio, Compression Engine features
+- ✅ Chapter 7 — Image, Video, Audio, Compression Engine features (8 features fully specced)
 - ⬜ Chapter 8 — Cloud, Sync, Search & Organization features
 - ⬜ Chapter 9 — Notifications, Admin, cross-cutting features
 - ⬜ Chapter 10 — Consolidated backlog, edge case index, acceptance criteria index
@@ -31,8 +31,9 @@ cross-reference the feature specs rather than duplicating them.
 - Chapter 4 (PDF Engine): 16 features specced ✅
 - Chapter 5 (OCR Engine): 8 features specced ✅
 - Chapter 6 (Office Engine): 8 features specced ✅
-- Running total specified: 52 / 92
-- Next up: Chapter 7 — Image, Video, Audio, Compression Engine features
+- Chapter 7 (Image/Video/Audio/Compression Engine): 8 features specced ✅
+- Running total specified: 60 / 92
+- Next up: Chapter 8 — Cloud, Sync, Search & Organization features
 
 ## Notes for continuation
 - Each feature spec must include: Purpose, Flow, Inputs, Outputs, Business Logic, Permissions, Errors,
