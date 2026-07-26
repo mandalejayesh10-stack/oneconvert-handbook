@@ -22,8 +22,11 @@ Master index reference: 13 volumes (V1–V13), Volume 2 alone covers 92 approved
 
 🎉 **VOLUME 2 IS 100% COMPLETE (92 / 92 FEATURES SPECIFIED)** 🎉
 
-## Volumes 3–13
-⬜ Not started. Per the master spec's cross-referencing principle, these should be built AFTER Volume 2's 92 features
+## Volume 3 — UI & Design System (Adobe Scan Mobile Aesthetics)
+- ✅ Chapter 11 — Design Tokens, Theme System & Adobe Scan Mobile Aesthetics
+- ✅ Chapter 12 — Camera Viewfinder & Real-Time Edge Overlay UI
+- ✅ Chapter 13 — Document Review, Filter Strip & Editing Suite UI
+- 🔶 Interactive Mobile/Web Prototype Application (In Progress)
 are fully specified, since UI (V3), Flutter (V4), Backend (V5), DB (V6), API (V7), and Engine (V8) docs all
 cross-reference the feature specs rather than duplicating them.
 

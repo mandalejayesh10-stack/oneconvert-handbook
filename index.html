@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>OneConvert — Mobile Document Scanner & PDF Engine</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-mode">
+
+  <!-- APP CONTAINER (Mobile Frame Simulation on Desktop / Native Fullscreen on Mobile) -->
+  <div class="app-viewport">
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- SCREEN 1: CAMERA SCANNER SURFACE (ADOBE SCAN MOBILE DESIGN)      -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <section id="screen-camera" class="screen active">
+      
+      <!-- Live Video Feed / Canvas -->
+      <div class="viewfinder-container">
+        <video id="camera-feed" autoplay playsinline muted></video>
+        <canvas id="edge-canvas"></canvas>
+
+        <!-- Simulated Document Frame (Fallback when no camera or test mode) -->
+        <div id="simulated-doc-frame" class="simulated-doc">
+          <div class="doc-texture">
+            <div class="doc-header-line"></div>
+            <div class="doc-body-line"></div>
+            <div class="doc-body-line short"></div>
+            <div class="doc-body-line"></div>
+            <div class="doc-table-sim">
+              <div class="sim-row"><span></span><span></span></div>
+              <div class="sim-row"><span></span><span></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Edge Detection Quadrilateral Overlay (Cyber Cyan #00F0FF) -->
+        <div id="edge-overlay" class="edge-overlay locked">
+          <div class="corner-handle top-left"></div>
+          <div class="corner-handle top-right"></div>
+          <div class="corner-handle bottom-left"></div>
+          <div class="corner-handle bottom-right"></div>
+          <div class="edge-line line-top"></div>
+          <div class="edge-line line-right"></div>
+          <div class="edge-line line-bottom"></div>
+          <div class="edge-line line-left"></div>
+          <div class="overlay-fill"></div>
+        </div>
+
+        <!-- Guidance Pill Indicator -->
+        <div id="guidance-pill" class="guidance-pill steady">
+          <span class="status-dot"></span>
+          <span id="guidance-text">Hold steady... Capturing</span>
+          <div id="auto-progress" class="auto-progress-bar"></div>
+        </div>
+      </div>
+
+      <!-- Top Navigation & Controls Bar (Glassmorphic) -->
+      <header class="camera-top-bar">
+        <button id="btn-close-camera" class="icon-btn" title="Close"><i data-lucide="x"></i></button>
+        <div class="top-controls-group">
+          <button id="btn-flash" class="icon-btn" title="Flash"><i data-lucide="zap-off"></i></button>
+          <button id="btn-grid" class="icon-btn" title="Grid"><i data-lucide="grid"></i></button>
+          <button id="btn-shutter-mode" class="pill-btn active">AUTO</button>
+        </div>
+      </header>
+
+      <!-- Document Mode Selector Carousel -->
+      <div class="mode-selector-wrapper">
+        <div class="mode-carousel">
+          <button class="mode-item" data-mode="passport">ID CARD</button>
+          <button class="mode-item active" data-mode="document">DOCUMENT</button>
+          <button class="mode-item" data-mode="book">BOOK</button>
+          <button class="mode-item" data-mode="receipt">RECEIPT</button>
+        </div>
+      </div>
+
+      <!-- Bottom Action Bar (Adobe Scan Shutter & Page Stack) -->
+      <footer class="camera-bottom-bar">
+        <!-- Gallery Import Button -->
+        <button id="btn-gallery-import" class="action-thumbnail-btn">
+          <div class="thumb-icon-placeholder"><i data-lucide="image"></i></div>
+          <span>Import</span>
+        </button>
+
+        <!-- Main Shutter Button -->
+        <div class="shutter-wrapper">
+          <button id="btn-shutter" class="shutter-btn">
+            <span class="shutter-inner"></span>
+            <svg class="shutter-ring-svg" viewBox="0 0 100 100">
+              <circle class="ring-bg" cx="50" cy="50" r="45"></circle>
+              <circle id="shutter-progress-ring" class="ring-fill" cx="50" cy="50" r="45"></circle>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Stack Counter & Done Button (Adobe Scan Style) -->
+        <button id="btn-review-stack" class="action-thumbnail-btn stack-btn">
+          <div class="stack-preview-container">
+            <div id="stack-card-3" class="stack-card card-3"></div>
+            <div id="stack-card-2" class="stack-card card-2"></div>
+            <div id="stack-card-1" class="stack-card card-1"></div>
+            <span id="page-count-badge" class="badge-count">0</span>
+          </div>
+          <span class="adjust-label">Adjust & Save</span>
+        </button>
+      </footer>
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- SCREEN 2: DOCUMENT REVIEW & FILTER SUITE (ADOBE SCAN STYLE)      -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <section id="screen-review" class="screen">
+      
+      <!-- Top Action Bar -->
+      <header class="review-top-bar">
+        <button id="btn-back-camera" class="icon-btn"><i data-lucide="arrow-left"></i></button>
+        <div class="doc-title-editor">
+          <input type="text" id="input-doc-title" value="Scan 26 Jul 2026" spellcheck="false">
+          <i data-lucide="edit-2" class="edit-icon"></i>
+        </div>
+        <button id="btn-save-pdf" class="primary-btn glow-btn">
+          <i data-lucide="file-check"></i> Save PDF
+        </button>
+      </header>
+
+      <!-- Main Page Preview Stage -->
+      <main class="review-stage">
+        <div class="page-preview-wrapper">
+          <div id="review-page-card" class="review-page-card filter-magic">
+            <!-- Simulated Page Content -->
+            <div class="rendered-page-content">
+              <div class="page-header-mark">OneConvert Scan Engine v1.0</div>
+              <h2 class="page-heading">Executive Document Summary</h2>
+              <div class="page-text-line"></div>
+              <div class="page-text-line"></div>
+              <div class="page-text-line short"></div>
+              <div class="page-table-block">
+                <div class="table-row header"><span>Feature</span><span>Status</span></div>
+                <div class="table-row"><span>Camera Edge Scan</span><span>✅ Active</span></div>
+                <div class="table-row"><span>Magic Color Filter</span><span>✅ Active</span></div>
+                <div class="table-row"><span>PDF Export</span><span>✅ Ready</span></div>
+              </div>
+              <div class="page-signature-stamp">
+                <span class="sig-line">Jayesh Mandale</span>
+                <span class="sig-title">Verified Author</span>
+              </div>
+            </div>
+
+            <!-- Manual Crop Quadrilateral Overlay (Active during Crop Mode) -->
+            <div id="manual-crop-overlay" class="manual-crop-overlay hidden">
+              <div class="crop-handle handle-tl" data-handle="tl"></div>
+              <div class="crop-handle handle-tr" data-handle="tr"></div>
+              <div class="crop-handle handle-bl" data-handle="bl"></div>
+              <div class="crop-handle handle-br" data-handle="br"></div>
+              <div class="crop-grid-line h1"></div>
+              <div class="crop-grid-line h2"></div>
+              <div class="crop-grid-line v1"></div>
+              <div class="crop-grid-line v2"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Page Indicator Pill -->
+        <div class="page-indicator-pill">
+          <span id="current-page-num">1</span> / <span id="total-pages-num">1</span>
+        </div>
+      </main>
+
+      <!-- Horizontal Page Thumbnail Strip -->
+      <div class="thumbnail-strip-bar">
+        <div id="thumbnail-list" class="thumbnail-list">
+          <!-- Dynamically populated page thumbnails -->
+        </div>
+        <button id="btn-add-more-pages" class="add-page-btn">
+          <i data-lucide="plus"></i>
+          <span>Add</span>
+        </button>
+      </div>
+
+      <!-- Bottom Editing Toolbar (Adobe Scan Tools) -->
+      <footer class="review-bottom-bar">
+        <button class="tool-item" id="tool-reorder">
+          <i data-lucide="move"></i>
+          <span>Reorder</span>
+        </button>
+        <button class="tool-item" id="tool-crop">
+          <i data-lucide="crop"></i>
+          <span>Crop</span>
+        </button>
+        <button class="tool-item active" id="tool-filter">
+          <i data-lucide="wand-2"></i>
+          <span>Color</span>
+        </button>
+        <button class="tool-item" id="tool-rotate">
+          <i data-lucide="rotate-cw"></i>
+          <span>Rotate</span>
+        </button>
+        <button class="tool-item danger" id="tool-delete">
+          <i data-lucide="trash-2"></i>
+          <span>Delete</span>
+        </button>
+      </footer>
+
+      <!-- Filter Selection Drawer Sheet -->
+      <div id="drawer-filter" class="drawer-sheet">
+        <div class="drawer-header">
+          <span>Apply Color Filter</span>
+          <button id="btn-close-filter-drawer" class="icon-btn-sm"><i data-lucide="x"></i></button>
+        </div>
+        <div class="filter-options-grid">
+          <button class="filter-chip" data-filter="original">
+            <div class="filter-swatch swatch-original">ABC</div>
+            <span>Original</span>
+          </button>
+          <button class="filter-chip active" data-filter="magic">
+            <div class="filter-swatch swatch-magic">ABC</div>
+            <span>Magic Color</span>
+          </button>
+          <button class="filter-chip" data-filter="bw">
+            <div class="filter-swatch swatch-bw">ABC</div>
+            <span>Black & White</span>
+          </button>
+          <button class="filter-chip" data-filter="greyscale">
+            <div class="filter-swatch swatch-grey">ABC</div>
+            <span>Greyscale</span>
+          </button>
+        </div>
+        <div class="drawer-footer">
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle-apply-all">
+            <span class="slider"></span>
+            <span class="label-text">Apply to all pages</span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- SCREEN 3: DOCUMENT LIBRARY / HOME (ADOBE SCAN DESIGN)             -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <section id="screen-library" class="screen">
+      <header class="library-header">
+        <div class="user-profile">
+          <div class="avatar-circle">JM</div>
+          <div>
+            <h1 class="app-title">OneConvert</h1>
+            <span class="user-tier-badge">Pro Subscriber</span>
+          </div>
+        </div>
+        <button id="btn-open-settings" class="icon-btn"><i data-lucide="settings"></i></button>
+      </header>
+
+      <div class="search-bar-container">
+        <div class="search-input-wrapper">
+          <i data-lucide="search" class="search-icon"></i>
+          <input type="text" placeholder="Search document text, titles, tags..." id="input-library-search">
+        </div>
+      </div>
+
+      <!-- Quick Category Chips -->
+      <div class="category-chips-scroll">
+        <button class="cat-chip active">All Scans</button>
+        <button class="cat-chip">PDF Documents</button>
+        <button class="cat-chip">OCR Searchable</button>
+        <button class="cat-chip">ID Cards</button>
+        <button class="cat-chip">Invoices</button>
+      </div>
+
+      <!-- Recent Documents List -->
+      <main class="library-content">
+        <div class="section-label">RECENT DOCUMENTS (3)</div>
+
+        <div class="doc-list-card">
+          <div class="doc-card-icon pdf"><i data-lucide="file-text"></i></div>
+          <div class="doc-card-info">
+            <span class="doc-name">Semester_Physics_Notes.pdf</span>
+            <span class="doc-meta">4 pages • 2.4 MB • 26 Jul 2026</span>
+          </div>
+          <button class="icon-btn-sm"><i data-lucide="more-vertical"></i></button>
+        </div>
+
+        <div class="doc-list-card">
+          <div class="doc-card-icon image"><i data-lucide="image"></i></div>
+          <div class="doc-card-info">
+            <span class="doc-name">Aadhaar_ID_Front_Back.pdf</span>
+            <span class="doc-meta">2 pages • 840 KB • 25 Jul 2026</span>
+          </div>
+          <button class="icon-btn-sm"><i data-lucide="more-vertical"></i></button>
+        </div>
+
+        <div class="doc-list-card">
+          <div class="doc-card-icon word"><i data-lucide="file-spreadsheet"></i></div>
+          <div class="doc-card-info">
+            <span class="doc-name">Client_Invoice_July_2026.xlsx</span>
+            <span class="doc-meta">1 sheet • 140 KB • 24 Jul 2026</span>
+          </div>
+          <button class="icon-btn-sm"><i data-lucide="more-vertical"></i></button>
+        </div>
+      </main>
+
+      <!-- Floating Camera Action Button -->
+      <button id="fab-start-scan" class="fab-scan-btn">
+        <i data-lucide="camera"></i>
+        <span>Scan</span>
+      </button>
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- MODAL: PDF GENERATING & SHARE SHEET                              -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <div id="modal-export" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div id="export-loading-state">
+          <div class="spinner-ring"></div>
+          <h3 class="modal-title">Assembling PDF Document...</h3>
+          <p class="modal-subtitle">Applying Magic Color filter & compiling text layers</p>
+        </div>
+
+        <div id="export-success-state" class="hidden">
+          <div class="success-icon-badge"><i data-lucide="check"></i></div>
+          <h3 class="modal-title">PDF Saved Successfully!</h3>
+          <p class="modal-subtitle" id="export-file-meta">Scan_26_Jul_2026.pdf (1.8 MB)</p>
+          
+          <div class="share-actions-grid">
+            <button class="share-btn" id="btn-share-whatsapp">
+              <i data-lucide="message-square"></i>
+              <span>WhatsApp</span>
+            </button>
+            <button class="share-btn" id="btn-share-drive">
+              <i data-lucide="cloud"></i>
+              <span>Google Drive</span>
+            </button>
+            <button class="share-btn" id="btn-share-email">
+              <i data-lucide="mail"></i>
+              <span>Email</span>
+            </button>
+            <button class="share-btn" id="btn-download-pdf">
+              <i data-lucide="download"></i>
+              <span>Download</span>
+            </button>
+          </div>
+
+          <button id="btn-close-export-modal" class="secondary-btn">Back to Library</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
