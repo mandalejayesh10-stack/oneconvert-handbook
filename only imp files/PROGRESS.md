@@ -13,7 +13,7 @@ Master index reference: 13 volumes (V1–V13), Volume 2 alone covers 92 approved
 - ✅ Chapter 2 — Account & Identity, Subscription & Billing features (10 features fully specced)
 - ✅ Chapter 3 — Scanner domain features (10 features fully specced)
 - ✅ Chapter 4 — PDF Engine features (16 features fully specced)
-- ⬜ Chapter 5 — OCR Engine features
+- ✅ Chapter 5 — OCR Engine features (8 features fully specced)
 - ⬜ Chapter 6 — Office Engine features
 - ⬜ Chapter 7 — Image, Video, Audio, Compression Engine features
 - ⬜ Chapter 8 — Cloud, Sync, Search & Organization features
@@ -29,8 +29,9 @@ cross-reference the feature specs rather than duplicating them.
 - Chapter 2 (Account/Identity/Sub/Billing): 10 features specced ✅
 - Chapter 3 (Scanner domain): 10 features specced ✅
 - Chapter 4 (PDF Engine): 16 features specced ✅
-- Running total specified: 36 / 92
-- Next up: Chapter 5 — OCR Engine features
+- Chapter 5 (OCR Engine): 8 features specced ✅
+- Running total specified: 44 / 92
+- Next up: Chapter 6 — Office Engine features (Word/Excel/PowerPoint conversion, editing, rendering)
 
 ## Notes for continuation
 - Each feature spec must include: Purpose, Flow, Inputs, Outputs, Business Logic, Permissions, Errors,
