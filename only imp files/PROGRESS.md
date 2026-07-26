@@ -47,7 +47,8 @@ cross-reference the feature specs rather than duplicating them.
 - Chapter 10 (Consolidated Backlog & Indexes): 17 features specced ✅
 - **TOTAL VOLUME 2 FEATURES SPECIFIED: 92 / 92 (100% COMPLETE)** ✅
 - **VOLUME 3 (UI & DESIGN SYSTEM): 100% COMPLETE** ✅
-- **Next up: Volume 4 — Flutter Architecture** (Clean architecture layers, Riverpod state management, GoRouter navigation, platform channels, offline local storage via Hive/Isar, platform abstraction interfaces)
+- **VOLUME 4 (FLUTTER ARCHITECTURE): 100% COMPLETE** ✅
+- **Next up: Volume 5 — Backend Architecture (AWS Serverless)** (API Gateway, AWS Lambda handlers, DynamoDB single-table design, S3 storage buckets, SQS queues, Cognito auth, EventBridge event routing)
 
 ## Notes for continuation
 - Each feature spec must include: Purpose, Flow, Inputs, Outputs, Business Logic, Permissions, Errors,
