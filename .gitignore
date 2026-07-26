@@ -1,0 +1,41 @@
+# ─── OS & Editor ───────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains
+.idea/
+*.iml
+
+# Windows shortcut files
+*.lnk
+
+# ─── Temp & Log files ──────────────────────────────────────────
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+
+# ─── Archive / Zip (raw source zips are not tracked) ───────────
+*.zip
+*.tar.gz
+*.rar
+
+# ─── Future: Flutter / Dart (when Flutter code is added) ───────
+# .dart_tool/
+# .flutter-plugins
+# .flutter-plugins-dependencies
+# build/
+# .pub-cache/
+# .pub/
+# pubspec.lock   ← keep this tracked when it exists
+
+# ─── Future: Node / npm (if any tooling is added) ──────────────
+# node_modules/
+# .env
+# .env.local
