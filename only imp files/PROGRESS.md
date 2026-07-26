@@ -17,7 +17,7 @@ Master index reference: 13 volumes (V1–V13), Volume 2 alone covers 92 approved
 - ✅ Chapter 6 — Office Engine features (8 features fully specced)
 - ✅ Chapter 7 — Image, Video, Audio, Compression Engine features (8 features fully specced)
 - ✅ Chapter 8 — Cloud, Sync, Search & Organization features (8 features fully specced)
-- ⬜ Chapter 9 — Notifications, Admin, cross-cutting features
+- ✅ Chapter 9 — Notifications, Admin & Cross-cutting features (7 features fully specced)
 - ⬜ Chapter 10 — Consolidated backlog, edge case index, acceptance criteria index
 
 ## Volumes 3–13
@@ -33,8 +33,9 @@ cross-reference the feature specs rather than duplicating them.
 - Chapter 6 (Office Engine): 8 features specced ✅
 - Chapter 7 (Image/Video/Audio/Compression Engine): 8 features specced ✅
 - Chapter 8 (Cloud/Sync/Search/Organization): 8 features specced ✅
-- Running total specified: 68 / 92
-- Next up: Chapter 9 — Notifications, Admin & Cross-cutting features
+- Chapter 9 (Notifications/Admin/Cross-cutting): 7 features specced ✅
+- Running total specified: 75 / 92
+- Next up: Chapter 10 — Consolidated Backlog, Edge Case Index & Acceptance Criteria Index
 
 ## Notes for continuation
 - Each feature spec must include: Purpose, Flow, Inputs, Outputs, Business Logic, Permissions, Errors,
