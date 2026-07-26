@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>OneConvert — Mobile Document Scanner & PDF Engine</title>
+  <title>OneConvert — Mobile Document Scanner & 92-in-1 Processing Engine</title>
 
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,7 +31,7 @@
         <video id="camera-feed" autoplay playsinline muted></video>
         <canvas id="edge-canvas"></canvas>
 
-        <!-- Simulated Document Frame (Fallback when no camera or test mode) -->
+        <!-- Simulated Document Frame -->
         <div id="simulated-doc-frame" class="simulated-doc">
           <div class="doc-texture">
             <div class="doc-header-line"></div>
@@ -45,7 +45,7 @@
           </div>
         </div>
 
-        <!-- Dynamic Edge Detection Quadrilateral Overlay (Cyber Cyan #00F0FF) -->
+        <!-- Dynamic Edge Detection Overlay (Cyber Cyan #00F0FF) -->
         <div id="edge-overlay" class="edge-overlay locked">
           <div class="corner-handle top-left"></div>
           <div class="corner-handle top-right"></div>
@@ -61,17 +61,24 @@
         <!-- Guidance Pill Indicator -->
         <div id="guidance-pill" class="guidance-pill steady">
           <span class="status-dot"></span>
-          <span id="guidance-text">Hold steady... Capturing</span>
+          <span id="guidance-text">Hold steady... Document Detected</span>
           <div id="auto-progress" class="auto-progress-bar"></div>
+        </div>
+
+        <!-- QR/Barcode Live Decode Overlay Badge -->
+        <div id="qr-detect-badge" class="qr-detect-badge hidden">
+          <i data-lucide="qr-code"></i>
+          <span>QR Detected: https://oneconvert.app/verify</span>
+          <button id="btn-copy-qr" class="badge-action-btn">Copy</button>
         </div>
       </div>
 
-      <!-- Top Navigation & Controls Bar (Glassmorphic) -->
+      <!-- Top Navigation Bar -->
       <header class="camera-top-bar">
-        <button id="btn-close-camera" class="icon-btn" title="Close"><i data-lucide="x"></i></button>
+        <button id="btn-close-camera" class="icon-btn" title="Library"><i data-lucide="grid"></i></button>
         <div class="top-controls-group">
+          <button id="btn-all-tools" class="pill-btn highlight-btn"><i data-lucide="layout-grid"></i> 92 Tools</button>
           <button id="btn-flash" class="icon-btn" title="Flash"><i data-lucide="zap-off"></i></button>
-          <button id="btn-grid" class="icon-btn" title="Grid"><i data-lucide="grid"></i></button>
           <button id="btn-shutter-mode" class="pill-btn active">AUTO</button>
         </div>
       </header>
@@ -79,10 +86,11 @@
       <!-- Document Mode Selector Carousel -->
       <div class="mode-selector-wrapper">
         <div class="mode-carousel">
-          <button class="mode-item" data-mode="passport">ID CARD</button>
+          <button class="mode-item" data-mode="passport">ID CARD (Feat 84)</button>
           <button class="mode-item active" data-mode="document">DOCUMENT</button>
           <button class="mode-item" data-mode="book">BOOK</button>
           <button class="mode-item" data-mode="receipt">RECEIPT</button>
+          <button class="mode-item" data-mode="batch">BATCH SCAN (Feat 3.9)</button>
         </div>
       </div>
 
@@ -105,7 +113,7 @@
           </button>
         </div>
 
-        <!-- Stack Counter & Done Button (Adobe Scan Style) -->
+        <!-- Stack Counter & Done Button -->
         <button id="btn-review-stack" class="action-thumbnail-btn stack-btn">
           <div class="stack-preview-container">
             <div id="stack-card-3" class="stack-card card-3"></div>
@@ -120,7 +128,7 @@
 
 
     <!-- ════════════════════════════════════════════════════════════════ -->
-    <!-- SCREEN 2: DOCUMENT REVIEW & FILTER SUITE (ADOBE SCAN STYLE)      -->
+    <!-- SCREEN 2: DOCUMENT REVIEW & FILTER SUITE                        -->
     <!-- ════════════════════════════════════════════════════════════════ -->
     <section id="screen-review" class="screen">
       
@@ -140,18 +148,17 @@
       <main class="review-stage">
         <div class="page-preview-wrapper">
           <div id="review-page-card" class="review-page-card filter-magic">
-            <!-- Simulated Page Content -->
             <div class="rendered-page-content">
-              <div class="page-header-mark">OneConvert Scan Engine v1.0</div>
+              <div class="page-header-mark">OneConvert Scan Engine v1.0 • 92 Features</div>
               <h2 class="page-heading">Executive Document Summary</h2>
               <div class="page-text-line"></div>
               <div class="page-text-line"></div>
               <div class="page-text-line short"></div>
               <div class="page-table-block">
-                <div class="table-row header"><span>Feature</span><span>Status</span></div>
-                <div class="table-row"><span>Camera Edge Scan</span><span>✅ Active</span></div>
-                <div class="table-row"><span>Magic Color Filter</span><span>✅ Active</span></div>
-                <div class="table-row"><span>PDF Export</span><span>✅ Ready</span></div>
+                <div class="table-row header"><span>Engine Domain</span><span>Status</span></div>
+                <div class="table-row"><span>Scanner & Filters</span><span>✅ Active</span></div>
+                <div class="table-row"><span>PDF & OCR Engine</span><span>✅ Active</span></div>
+                <div class="table-row"><span>Office & Media Tools</span><span>✅ Active</span></div>
               </div>
               <div class="page-signature-stamp">
                 <span class="sig-line">Jayesh Mandale</span>
@@ -159,7 +166,7 @@
               </div>
             </div>
 
-            <!-- Manual Crop Quadrilateral Overlay (Active during Crop Mode) -->
+            <!-- Manual Crop Quadrilateral Overlay -->
             <div id="manual-crop-overlay" class="manual-crop-overlay hidden">
               <div class="crop-handle handle-tl" data-handle="tl"></div>
               <div class="crop-handle handle-tr" data-handle="tr"></div>
@@ -173,7 +180,6 @@
           </div>
         </div>
 
-        <!-- Page Indicator Pill -->
         <div class="page-indicator-pill">
           <span id="current-page-num">1</span> / <span id="total-pages-num">1</span>
         </div>
@@ -181,16 +187,14 @@
 
       <!-- Horizontal Page Thumbnail Strip -->
       <div class="thumbnail-strip-bar">
-        <div id="thumbnail-list" class="thumbnail-list">
-          <!-- Dynamically populated page thumbnails -->
-        </div>
+        <div id="thumbnail-list" class="thumbnail-list"></div>
         <button id="btn-add-more-pages" class="add-page-btn">
           <i data-lucide="plus"></i>
           <span>Add</span>
         </button>
       </div>
 
-      <!-- Bottom Editing Toolbar (Adobe Scan Tools) -->
+      <!-- Bottom Editing Toolbar -->
       <footer class="review-bottom-bar">
         <button class="tool-item" id="tool-reorder">
           <i data-lucide="move"></i>
@@ -208,9 +212,9 @@
           <i data-lucide="rotate-cw"></i>
           <span>Rotate</span>
         </button>
-        <button class="tool-item danger" id="tool-delete">
-          <i data-lucide="trash-2"></i>
-          <span>Delete</span>
+        <button class="tool-item" id="tool-more-actions">
+          <i data-lucide="more-horizontal"></i>
+          <span>More</span>
         </button>
       </footer>
 
@@ -250,7 +254,7 @@
 
 
     <!-- ════════════════════════════════════════════════════════════════ -->
-    <!-- SCREEN 3: DOCUMENT LIBRARY / HOME (ADOBE SCAN DESIGN)             -->
+    <!-- SCREEN 3: DOCUMENT LIBRARY / HOME                                -->
     <!-- ════════════════════════════════════════════════════════════════ -->
     <section id="screen-library" class="screen">
       <header class="library-header">
@@ -258,57 +262,66 @@
           <div class="avatar-circle">JM</div>
           <div>
             <h1 class="app-title">OneConvert</h1>
-            <span class="user-tier-badge">Pro Subscriber</span>
+            <span class="user-tier-badge" id="user-tier-label">Pro Subscriber • 92 Features Active</span>
           </div>
         </div>
-        <button id="btn-open-settings" class="icon-btn"><i data-lucide="settings"></i></button>
+        <button id="btn-open-tools-master" class="icon-btn highlight-icon" title="92 Tools Catalog"><i data-lucide="layout-grid"></i></button>
       </header>
 
       <div class="search-bar-container">
         <div class="search-input-wrapper">
           <i data-lucide="search" class="search-icon"></i>
-          <input type="text" placeholder="Search document text, titles, tags..." id="input-library-search">
+          <input type="text" placeholder="Search full-text OCR, PDFs, tags (Feat 8.3)..." id="input-library-search">
         </div>
       </div>
 
       <!-- Quick Category Chips -->
       <div class="category-chips-scroll">
-        <button class="cat-chip active">All Scans</button>
-        <button class="cat-chip">PDF Documents</button>
-        <button class="cat-chip">OCR Searchable</button>
-        <button class="cat-chip">ID Cards</button>
-        <button class="cat-chip">Invoices</button>
+        <button class="cat-chip active">All Files</button>
+        <button class="cat-chip" data-filter="pdf">PDF Engine</button>
+        <button class="cat-chip" data-filter="ocr">Searchable OCR</button>
+        <button class="cat-chip" data-filter="office">Office Docs</button>
+        <button class="cat-chip" data-filter="media">Media & Archives</button>
       </div>
 
       <!-- Recent Documents List -->
       <main class="library-content">
-        <div class="section-label">RECENT DOCUMENTS (3)</div>
+        <div class="section-label">RECENT DOCUMENTS (4)</div>
 
-        <div class="doc-list-card">
+        <div class="doc-list-card" data-doc-id="1">
           <div class="doc-card-icon pdf"><i data-lucide="file-text"></i></div>
           <div class="doc-card-info">
             <span class="doc-name">Semester_Physics_Notes.pdf</span>
-            <span class="doc-meta">4 pages • 2.4 MB • 26 Jul 2026</span>
+            <span class="doc-meta">4 pages • 2.4 MB • OCR Searchable</span>
           </div>
-          <button class="icon-btn-sm"><i data-lucide="more-vertical"></i></button>
+          <button class="icon-btn-sm doc-actions-btn"><i data-lucide="more-vertical"></i></button>
         </div>
 
-        <div class="doc-list-card">
+        <div class="doc-list-card" data-doc-id="2">
           <div class="doc-card-icon image"><i data-lucide="image"></i></div>
           <div class="doc-card-info">
             <span class="doc-name">Aadhaar_ID_Front_Back.pdf</span>
-            <span class="doc-meta">2 pages • 840 KB • 25 Jul 2026</span>
+            <span class="doc-meta">2 pages • 840 KB • ID Card Stitched</span>
           </div>
-          <button class="icon-btn-sm"><i data-lucide="more-vertical"></i></button>
+          <button class="icon-btn-sm doc-actions-btn"><i data-lucide="more-vertical"></i></button>
         </div>
 
-        <div class="doc-list-card">
+        <div class="doc-list-card" data-doc-id="3">
           <div class="doc-card-icon word"><i data-lucide="file-spreadsheet"></i></div>
           <div class="doc-card-info">
             <span class="doc-name">Client_Invoice_July_2026.xlsx</span>
-            <span class="doc-meta">1 sheet • 140 KB • 24 Jul 2026</span>
+            <span class="doc-meta">1 sheet • 140 KB • Excel Table Extracted</span>
           </div>
-          <button class="icon-btn-sm"><i data-lucide="more-vertical"></i></button>
+          <button class="icon-btn-sm doc-actions-btn"><i data-lucide="more-vertical"></i></button>
+        </div>
+
+        <div class="doc-list-card" data-doc-id="4">
+          <div class="doc-card-icon archive"><i data-lucide="archive"></i></div>
+          <div class="doc-card-info">
+            <span class="doc-name">Project_Assets_Backup.zip</span>
+            <span class="doc-meta">12 files • 18.2 MB • AES-256 Encrypted</span>
+          </div>
+          <button class="icon-btn-sm doc-actions-btn"><i data-lucide="more-vertical"></i></button>
         </div>
       </main>
 
@@ -321,8 +334,230 @@
 
 
     <!-- ════════════════════════════════════════════════════════════════ -->
-    <!-- MODAL: PDF GENERATING & SHARE SHEET                              -->
+    <!-- MASTER MODAL: 92-IN-1 PROCESSING ENGINE TOOLBOX CATALOG         -->
     <!-- ════════════════════════════════════════════════════════════════ -->
+    <div id="modal-tools-master" class="modal-overlay hidden">
+      <div class="modal-card master-tools-card">
+        <div class="tools-master-header">
+          <div>
+            <h2 class="master-title">92-in-1 Engine Suite</h2>
+            <span class="master-subtitle">Select any processing tool to execute live</span>
+          </div>
+          <button id="btn-close-tools-master" class="icon-btn-sm"><i data-lucide="x"></i></button>
+        </div>
+
+        <!-- Engine Domain Tabs -->
+        <div class="domain-tabs-scroll">
+          <button class="domain-tab active" data-domain="all">All (92)</button>
+          <button class="domain-tab" data-domain="pdf">PDF Engine</button>
+          <button class="domain-tab" data-domain="ocr">OCR Engine</button>
+          <button class="domain-tab" data-domain="office">Office Engine</button>
+          <button class="domain-tab" data-domain="media">Media & ZIP</button>
+          <button class="domain-tab" data-domain="cloud">Cloud & Sync</button>
+          <button class="domain-tab" data-domain="account">Account & Admin</button>
+        </div>
+
+        <!-- Tools Grid Catalog -->
+        <div class="tools-grid-catalog" id="tools-grid-catalog">
+          <!-- PDF Engine Tools -->
+          <div class="tool-card" data-domain="pdf" data-action="merge">
+            <div class="tool-icon-box pdf"><i data-lucide="layers"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Merge PDF</span>
+              <span class="tool-desc">Combine multiple PDFs & images (Feat 4.2)</span>
+            </div>
+          </div>
+
+          <div class="tool-card" data-domain="pdf" data-action="split">
+            <div class="tool-icon-box pdf"><i data-lucide="scissors"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Split PDF</span>
+              <span class="tool-desc">Split by range, pages, or chapters (Feat 4.3)</span>
+            </div>
+          </div>
+
+          <div class="tool-card" data-domain="pdf" data-action="compress">
+            <div class="tool-icon-box pdf"><i data-lucide="minimize-2"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Compress PDF</span>
+              <span class="tool-desc">Target KB slider & quality presets (Feat 4.4)</span>
+            </div>
+          </div>
+
+          <div class="tool-card" data-domain="pdf" data-action="organize">
+            <div class="tool-icon-box pdf"><i data-lucide="grid"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Organize Pages</span>
+              <span class="tool-desc">Rotate, delete, reorder, blank page (Feat 4.5)</span>
+            </div>
+          </div>
+
+          <div class="tool-card" data-domain="pdf" data-action="watermark">
+            <div class="tool-icon-box pdf"><i data-lucide="stamp"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Watermark</span>
+              <span class="tool-desc">Add text & logo watermark (Feat 4.6)</span>
+            </div>
+          </div>
+
+          <div class="tool-card" data-domain="pdf" data-action="protect">
+            <div class="tool-icon-box pdf"><i data-lucide="lock"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Protect PDF</span>
+              <span class="tool-desc">AES-256 Open & Permission lock (Feat 4.7)</span>
+            </div>
+          </div>
+
+          <div class="tool-card" data-domain="pdf" data-action="unlock">
+            <div class="tool-icon-box pdf"><i data-lucide="unlock"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Unlock PDF</span>
+              <span class="tool-desc">Remove password protection (Feat 4.8)</span>
+            </div>
+          </div>
+
+          <div class="tool-card" data-domain="pdf" data-action="sign">
+            <div class="tool-icon-box pdf"><i data-lucide="pen-tool"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Fill & Sign</span>
+              <span class="tool-desc">Freehand signature & AcroForms (Feat 4.10)</span>
+            </div>
+          </div>
+
+          <div class="tool-card" data-domain="pdf" data-action="redact">
+            <div class="tool-icon-box pdf"><i data-lucide="eye-off"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Redact PDF</span>
+              <span class="tool-desc">Blackout PII & keyword redact (Feat 4.11)</span>
+            </div>
+          </div>
+
+          <div class="tool-card" data-domain="pdf" data-action="ai">
+            <div class="tool-icon-box pdf"><i data-lucide="sparkles"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">AI PDF Assistant</span>
+              <span class="tool-desc">Summarize, chat & translate PDF (Feat 4.14)</span>
+            </div>
+          </div>
+
+          <!-- OCR Engine Tools -->
+          <div class="tool-card" data-domain="ocr" data-action="ocr-run">
+            <div class="tool-icon-box ocr"><i data-lucide="file-search"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Searchable OCR</span>
+              <span class="tool-desc">10+ Indian & Global languages (Feat 5.1)</span>
+            </div>
+          </div>
+
+          <div class="tool-card" data-domain="ocr" data-action="table-extract">
+            <div class="tool-icon-box ocr"><i data-lucide="table"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Table Extractor</span>
+              <span class="tool-desc">Scanned table to Excel/CSV (Feat 5.3)</span>
+            </div>
+          </div>
+
+          <div class="tool-card" data-domain="ocr" data-action="icr">
+            <div class="tool-icon-box ocr"><i data-lucide="pencil"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Handwriting ICR</span>
+              <span class="tool-desc">Transcribe handwritten notes (Feat 5.5)</span>
+            </div>
+          </div>
+
+          <!-- Office Engine Tools -->
+          <div class="tool-card" data-domain="office" data-action="word-pdf">
+            <div class="tool-icon-box office"><i data-lucide="file-type"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Word to PDF</span>
+              <span class="tool-desc">DOCX / DOC to PDF conversion (Feat 6.1)</span>
+            </div>
+          </div>
+
+          <div class="tool-card" data-domain="office" data-action="excel-pdf">
+            <div class="tool-icon-box office"><i data-lucide="file-spreadsheet"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Excel to PDF</span>
+              <span class="tool-desc">Fit-all-columns to page width (Feat 6.2)</span>
+            </div>
+          </div>
+
+          <div class="tool-card" data-domain="office" data-action="pptx-pdf">
+            <div class="tool-icon-box office"><i data-lucide="presentation"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">PowerPoint to PDF</span>
+              <span class="tool-desc">Full slides & 4-up handouts (Feat 6.3)</span>
+            </div>
+          </div>
+
+          <!-- Media & Archive Tools -->
+          <div class="tool-card" data-domain="media" data-action="heic-convert">
+            <div class="tool-icon-box media"><i data-lucide="image"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">HEIC / Image Convert</span>
+              <span class="tool-desc">HEIC to JPEG/PNG & Resize (Feat 7.1)</span>
+            </div>
+          </div>
+
+          <div class="tool-card" data-domain="media" data-action="audio-extract">
+            <div class="tool-icon-box media"><i data-lucide="music"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Audio Extractor</span>
+              <span class="tool-desc">Video MP4 to MP3 audio (Feat 7.4)</span>
+            </div>
+          </div>
+
+          <div class="tool-card" data-domain="media" data-action="zip-manager">
+            <div class="tool-icon-box media"><i data-lucide="archive"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">ZIP / RAR Manager</span>
+              <span class="tool-desc">Compress & extract RAR/7Z/ZIP (Feat 7.8)</span>
+            </div>
+          </div>
+
+          <!-- Cloud & Account Tools -->
+          <div class="tool-card" data-domain="cloud" data-action="drive-sync">
+            <div class="tool-icon-box cloud"><i data-lucide="cloud"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Cloud Sync Drive</span>
+              <span class="tool-desc">Google Drive, Dropbox, OneDrive (Feat 8.1)</span>
+            </div>
+          </div>
+
+          <div class="tool-card" data-domain="account" data-action="student-verify">
+            <div class="tool-icon-box account"><i data-lucide="graduation-cap"></i></div>
+            <div class="tool-meta">
+              <span class="tool-name">Student Verification</span>
+              <span class="tool-desc">SheerID Student Discount (Feat 2.10)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- INTERACTIVE TOOL EXECUTION MODAL (Renders Active Tool Result)    -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <div id="modal-tool-executor" class="modal-overlay hidden">
+      <div class="modal-card executor-card">
+        <div class="executor-header">
+          <h3 id="executor-title">Processing Tool...</h3>
+          <button id="btn-close-executor" class="icon-btn-sm"><i data-lucide="x"></i></button>
+        </div>
+
+        <div class="executor-body" id="executor-body">
+          <!-- Dynamic execution controls populated by JS -->
+        </div>
+
+        <div class="executor-footer">
+          <button id="btn-execute-action" class="primary-btn glow-btn width-full">Execute Operation</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- MODAL: PDF GENERATING & SHARE SHEET -->
     <div id="modal-export" class="modal-overlay hidden">
       <div class="modal-card">
         <div id="export-loading-state">
